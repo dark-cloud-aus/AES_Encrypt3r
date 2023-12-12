@@ -1,0 +1,45 @@
+# AES ENCRYP3R SCRIPT by David Gilmore
+
+
+#      ___           ___           ___                    ___           ___           ___           ___                       ___                     ___
+#    /  /\         /  /\         /  /\                  /  /\         /__/\         /  /\         /  /\          ___        /  /\        ___        /  /\
+#   /  /::\       /  /:/_       /  /:/_                /  /:/_        \  \:\       /  /:/        /  /::\        /__/|      /  /::\      /  /\      /  /::\
+#  /  /:/\:\     /  /:/ /\     /  /:/ /\              /  /:/ /\        \  \:\     /  /:/        /  /:/\:\      |  |:|     /  /:/\:\    /  /:/     /  /:/\:\
+# /  /:/~/::\   /  /:/ /:/_   /  /:/ /::\            /  /:/ /:/_   _____\__\:\   /  /:/  ___   /  /:/~/:/      |  |:|    /  /:/~/:/   /  /:/     /  /:/~/:/
+# /__/:/ /:/\:\ /__/:/ /:/ /\ /__/:/ /:/\:\          /__/:/ /:/ /\ /__/::::::::\ /__/:/  /  /\ /__/:/ /:/___  __|__|:|   /__/:/ /:/   /  /::\    /__/:/ /:/___
+# \  \:\/:/__\/ \  \:\/:/ /:/ \  \:\/:/~/:/          \  \:\/:/ /:/ \  \:\~~\~~\/ \  \:\ /  /:/ \  \:\/:::::/ /__/::::\   \  \:\/:/   /__/:/\:\   \  \:\/:::::/
+# \  \::/       \  \::/ /:/   \  \::/ /:/            \  \::/ /:/   \  \:\  ~~~   \  \:\  /:/   \  \::/~~~~     ~\~~\:\   \  \::/    \__\/  \:\   \  \::/~~~~
+#  \  \:\        \  \:\/:/     \__\/ /:/              \  \:\/:/     \  \:\        \  \:\/:/     \  \:\           \  \:\   \  \:\         \  \:\   \  \:\
+#   \  \:\        \  \::/        /__/:/                \  \::/       \  \:\        \  \::/       \  \:\           \__\/    \  \:\         \__\/    \  \:\
+#    \__\/         \__\/         \__\/                  \__\/         \__\/         \__\/         \__\/                     \__\/                   \__\/
+
+
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import pad
+from base64 import b64encode
+
+
+def encrypt_message(message, key):
+    # Initialize AES cipher with the key and an initialization vector
+    cipher = AES.new(key, AES.MODE_CBC)
+    # Encrypt the message, padding it to the block size
+    ct_bytes = cipher.encrypt(pad(message.encode('utf-8'), AES.block_size))
+    # Encode the encrypted message and the initialization vector in base64
+    iv = b64encode(cipher.iv).decode('utf-8')
+    ct = b64encode(ct_bytes).decode('utf-8')
+    return iv, ct
+
+
+# Prompt the user for a message
+user_message = input("Enter a message to encrypt: ")
+
+# Define a 16-byte key (for AES-128)
+# In a real application I would not be storing the key here AND NOR SHOULD YOU !
+encryption_key = b'16byteslongkey!'
+
+# Encrypting the message
+iv, encrypted_message = encrypt_message(user_message, encryption_key)
+
+# Display the result
+print("Initialization Vector:", iv)
+print("Encrypted Message:", encrypted_message)
